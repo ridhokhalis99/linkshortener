@@ -3,6 +3,7 @@ package com.ridhokhalis.linkshortener.controller;
 import com.ridhokhalis.linkshortener.config.AppProperties;
 import com.ridhokhalis.linkshortener.model.ShortLink;
 import com.ridhokhalis.linkshortener.service.ShortLinkService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,12 @@ public class ShortLinkController {
                 "shortUrl", appProperties.getBaseUrl() + link.getShortCode()
         ));
     }
-
     @GetMapping("/{shortCode}")
-    public ResponseEntity<Void> redirect(@PathVariable String shortCode) {
-        String originalUrl = shortLinkService.resolveShortCode(shortCode);
+    public ResponseEntity<Void> redirect(
+            @PathVariable String shortCode,
+            HttpServletRequest request
+    ) {
+        String originalUrl = shortLinkService.resolveShortCode(shortCode, request);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(originalUrl))
                 .build();

@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew build -x test --no-daemon
+RUN chmod +x ./gradlew
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "build/libs/linkshortener-0.0.1-SNAPSHOT.jar"]
+CMD ["./gradlew", "bootRun"]

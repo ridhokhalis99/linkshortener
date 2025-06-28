@@ -1,8 +1,10 @@
 package com.ridhokhalis.linkshortener.service;
 
+import com.ridhokhalis.linkshortener.dto.AnalyticsEvent;
 import com.ridhokhalis.linkshortener.model.ShortLink;
 import com.ridhokhalis.linkshortener.repository.ShortLinkRepository;
 import com.ridhokhalis.linkshortener.kafka.AnalyticsProducer;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +34,19 @@ public class ShortLinkService {
         return repository.save(link);
     }
 
-    public String resolveShortCode(String shortCode) {
+    public String resolveShortCode(String shortCode, HttpServletRequest request) {
         ShortLink link = repository.findById(shortCode)
                 .orElseThrow(() -> new RuntimeException("Short code not found"));
 
-        analyticsProducer.sendAccessEvent(shortCode);
+        AnalyticsEvent event = new AnalyticsEvent(
+                shortCode,
+                LocalDateTime.now(),
+                request.getRemoteAddr(),
+                request.getHeader("User-Agent"),
+                request.getHeader("Referer")
+        );
+
+        analyticsProducer.sendAccessEvent(event);
 
         return link.getOriginalUrl();
     }
