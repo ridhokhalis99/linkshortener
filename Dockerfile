@@ -8,4 +8,4 @@ RUN chmod +x ./gradlew
 
 EXPOSE 8080
 
-CMD ["./gradlew", "bootRun"]
+CMD ["./gradlew", "bootRun", "--no-daemon"]

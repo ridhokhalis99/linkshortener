@@ -1,7 +1,7 @@
 package com.ridhokhalis.linkshortener.controller;
 
 import com.ridhokhalis.linkshortener.config.AppProperties;
-import com.ridhokhalis.linkshortener.model.ShortLink;
+import com.ridhokhalis.linkshortener.entity.ShortLinkEntity;
 import com.ridhokhalis.linkshortener.service.ShortLinkService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ShortLinkController {
     @PostMapping("/links")
     public ResponseEntity<Map<String, String>> createShortLink(@RequestBody Map<String, String> request) {
         String originalUrl = request.get("url");
-        ShortLink link = shortLinkService.createShortLink(originalUrl);
+        ShortLinkEntity link = shortLinkService.createShortLink(originalUrl);
         return ResponseEntity.ok(Map.of(
                 "shortCode", link.getShortCode(),
                 "shortUrl", appProperties.getBaseUrl() + link.getShortCode()

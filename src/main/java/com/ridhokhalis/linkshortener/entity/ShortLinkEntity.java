@@ -1,8 +1,6 @@
-package com.ridhokhalis.linkshortener.model;
+package com.ridhokhalis.linkshortener.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,9 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ShortLink {
+public class ShortLinkEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String shortCode;
     private String originalUrl;
     private LocalDateTime createdAt;

@@ -1,7 +1,7 @@
 package com.ridhokhalis.linkshortener.service;
 
 import com.ridhokhalis.linkshortener.dto.AnalyticsEvent;
-import com.ridhokhalis.linkshortener.model.ShortLink;
+import com.ridhokhalis.linkshortener.entity.ShortLinkEntity;
 import com.ridhokhalis.linkshortener.repository.ShortLinkRepository;
 import com.ridhokhalis.linkshortener.kafka.AnalyticsProducer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,13 +19,13 @@ public class ShortLinkService {
     private final ShortLinkRepository repository;
     private final AnalyticsProducer analyticsProducer;
 
-    public ShortLink createShortLink(String originalUrl) {
-        Optional<ShortLink> existing = repository.findByOriginalUrl(originalUrl);
+    public ShortLinkEntity createShortLink(String originalUrl) {
+        Optional<ShortLinkEntity> existing = repository.findByOriginalUrl(originalUrl);
         if (existing.isPresent()) return existing.get();
 
         String shortCode = generateShortCode();
 
-        ShortLink link = ShortLink.builder()
+        ShortLinkEntity link = ShortLinkEntity.builder()
                 .shortCode(shortCode)
                 .originalUrl(originalUrl)
                 .createdAt(LocalDateTime.now())
@@ -35,7 +35,7 @@ public class ShortLinkService {
     }
 
     public String resolveShortCode(String shortCode, HttpServletRequest request) {
-        ShortLink link = repository.findById(shortCode)
+        ShortLinkEntity link = repository.findByShortCode(shortCode)
                 .orElseThrow(() -> new RuntimeException("Short code not found"));
 
         AnalyticsEvent event = new AnalyticsEvent(

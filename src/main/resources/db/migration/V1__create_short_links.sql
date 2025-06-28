@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS short_links (
   id SERIAL PRIMARY KEY,
-  short_code VARCHAR(255) NOT NULL,
+  short_code VARCHAR(255) NOT NULL UNIQUE,
   original_url TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
