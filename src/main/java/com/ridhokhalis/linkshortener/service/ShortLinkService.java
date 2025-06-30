@@ -6,7 +6,9 @@ import com.ridhokhalis.linkshortener.repository.ShortLinkRepository;
 import com.ridhokhalis.linkshortener.kafka.AnalyticsProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -36,7 +38,7 @@ public class ShortLinkService {
 
     public String resolveShortCode(String shortCode, HttpServletRequest request) {
         ShortLinkEntity link = repository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("Short code not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "URL not found"));
 
         AnalyticsEvent event = new AnalyticsEvent(
                 shortCode,
